@@ -1,0 +1,35 @@
+#!/bin/bash
+#author: Max Frühmann
+if [[ $1 = "" || $2 = "" ]]; then
+	echo "Usage: ./whotrace.sh <TARGET-IP> <OUTPUT-FILE-NAME>"
+	exit 3
+fi
+if [ -f $2 ]; then
+	echo "File $2 exists! Overwrite it?"
+	echo "[yes/no]"
+	read des
+	if [ $des = "no" ]; then
+		echo "Not Overwriting!"
+		exit 3
+	fi
+fi
+ips=$(traceroute $1 | awk '{if(NR>1)print $2}')
+echo "Route:"
+echo "$ips"
+echo "Route:" > $2
+echo "$ips" >> $2
+count=1
+all=$(wc -l $2 | awk '{print $1}')
+let "all--"
+cat $2 | while read curIP; do
+	if [ $curIP = "Route:" ]; then
+		continue
+	fi
+	echo "Requesting IP No. $count/$all"
+	let "count++"
+	echo "" >> $2
+	echo "WhoIs from IP: $curIP" >> $2
+	echo "" >> $2
+	echo "$(whois $curIP)" >> $2
+done 
+echo "Done!"
