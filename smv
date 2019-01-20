@@ -1,0 +1,9 @@
+#!/bin/bash
+#author: Max Fruehmann, 3BHIT
+if [[ "$1" == "" || "$2" == "" ]];
+then
+	echo "Usage: smv <Local File> <Remote User@Destination IP:Destination Path>"
+	exit 2
+fi
+scp $1 $2
+rm $1
