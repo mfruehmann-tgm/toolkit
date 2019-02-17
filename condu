@@ -1,6 +1,6 @@
 #!/bin/bash
 while [ True ] 
 do 
-	echo -ne "$(du -h $1)\r"
+	echo -ne "$(du -h -d 0 $1)\r"
 	sleep 0.5
 done

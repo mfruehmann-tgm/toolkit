@@ -8,23 +8,34 @@ build_kernel(){
 	mkdir kernel
 	cd kernel
 	echo "$INFO Downloading Source-Files..."
-	wget -q -O kernel_tar.tar.xz $1
-	wget -q -O kernel.tar.sign $2
-	keys=$(gpg --list-keys)
-	if [[ $keys != *"linus torvalds"* && $keys != *"Greg Kroah-Hartman"* ]] 
+	wget -q $1
+	tar=$(ls)
+	echo "$INFO Downloading GPG Signatures..."
+	wget -q $2
+	signature=$(ls *.sign)
+	keys=$(gpg2 --list-keys)
+	if [[ "$keys" != *"linus torvalds"* && $keys != *"Greg Kroah-Hartman"* ]] 
 	then
 		echo "$WARN No Public Keys... Downloading..." 
-		gpg --keyserver http://keys.gnupg.net --recv-keys 678D1B42 6092693E
+		gpg2 --keyserver http://keys.gnupg.net --recv-keys 678D1B42 6092693E
 		echo "$OK Downloaded Public Keys"
 	fi
-	sign=$(unxz kernel_tar.tar.xz | gpg --verify kernel.tar.sign)
-	if [ $sign == *"Can't check signatures"* ] then
+	echo "$INFO Verifying Kernel Packages... Please be pacient..."
+	sign=$(unxz $tar | gpg2 --verify $signature)
+	if [ "$sign" == *"Good signature"* ] 
+	then	
+		echo "$OK Kernel Packages verified!"
+	else
+		cd ..
+		rm -rf kernel/
 		echo "$ERR Verifying Kernel Package failed. Aborting!"
 		exit 2
 	fi
 	echo "$INFO Unpacking Source-Files"
-	tar xaf kernel_tar.tar.xz
-	rm kernel_tar.tar.xz
+	tar=$(ls *.tar)
+	tar xf $tar
+	rm $tar
+	rm $signature
 	dir="$(ls)"
 	cd $dir
 	echo "$OK Source-Files unpacked"

@@ -5,5 +5,4 @@ then
 	echo "Usage: smv <Local File> <Remote User@Destination IP:Destination Path>"
 	exit 2
 fi
-scp $1 $2
-rm $1
+scp $1 $2 && rm $1
