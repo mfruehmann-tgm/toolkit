@@ -8,10 +8,12 @@ build_kernel(){
 	mkdir kernel
 	cd kernel
 	echo "$INFO Downloading Source-Files..."
-	wget -q $1
+	#wget -q $1
+	curl -OL $1
 	tar=$(ls)
 	echo "$INFO Downloading GPG Signatures..."
-	wget -q $2
+	#wget -q $2
+	curl -OL $2
 	signature=$(ls *.sign)
 	keys=$(gpg2 --list-keys)
 	if [[ "$keys" != *"linus torvalds"* && $keys != *"Greg Kroah-Hartman"* ]] 
@@ -21,8 +23,13 @@ build_kernel(){
 		echo "$OK Downloaded Public Keys"
 	fi
 	echo "$INFO Verifying Kernel Packages... Please be pacient..."
-	sign=$(unxz $tar | gpg2 --verify $signature)
-	if [ "$sign" == *"Good signature"* ] 
+#	sign=$(echo $(xz -cd $tar | gpg2 --verify $signature - ))
+#	echo $sign
+#	if [ "$(echo $sign | grep "Primary key fingerprint")" != "" ]
+	unxz $tar
+	tar=$(ls *.tar)
+	gpg2 --verify $signature $tar 
+	if [ $? -eq 0 ]
 	then	
 		echo "$OK Kernel Packages verified!"
 	else
