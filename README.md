@@ -9,7 +9,7 @@ It is a tool that is capable of building a kernel image automatically. It downlo
 verifies the Files and builds/installs the packages.
 
 ## condu
-It's just cuntinous du (disk usage)
+It's just continous du (disk usage)
 
 ## smv
 It is like scp but it removes the file after copying was scuccessful.
