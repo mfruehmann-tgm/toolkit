@@ -1,0 +1,17 @@
+#!/bin/bash
+# Autor. Max Fruehmann
+# Optimizes RAM and SWAP memory
+if [ '$(whoami)' != 'root' ] 
+then
+	echo "Run with superuser privileges!"
+	exit 2
+fi
+sync
+echo 1 > /proc/sys/vm/drop_caches
+sync 
+echo 2 > /proc/sys/vm/drop_caches
+echo "Dropped Caches"
+sync
+swapoff -a
+swapon -a
+echo "Dropped Swap"
