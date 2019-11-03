@@ -1,0 +1,19 @@
+#!/bin/bash
+case $1 in
+    router)
+        knock mfruehmann.ddns.net 6000
+        knock mfruehmann.ddns.net 9000
+        knock mfruehmann.ddns.net 12000
+        echo "Done"
+        echo "opening winbox"
+        wine /home/max/winbox.exe &
+        ;;
+    gaia)
+        knock mfruehmann.ddns.net 8000
+        knock mfruehmann.ddns.net 11000
+        knock mfruehmann.ddns.net 14000
+        echo "Done"
+        ;;
+esac
+        
+        
